@@ -1,10 +1,11 @@
-﻿using Laboratorio_6_OOP_201902.Enums;
+﻿using Laboratorio_7_OOP_201902.Enums;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Laboratorio_6_OOP_201902.Cards
+namespace Laboratorio_7_OOP_201902.Cards
 {
+    [Serializable]
     public class CombatCard : Card
     {
         //Atributos
@@ -44,6 +45,6 @@ namespace Laboratorio_6_OOP_201902.Cards
             }
         }
 
-
+        
     }
 }
