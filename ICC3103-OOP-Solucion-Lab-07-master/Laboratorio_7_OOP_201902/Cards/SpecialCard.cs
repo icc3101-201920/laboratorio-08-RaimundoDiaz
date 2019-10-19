@@ -1,4 +1,5 @@
 ﻿using Laboratorio_7_OOP_201902.Enums;
+using Laboratorio_7_OOP_201902.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -6,7 +7,7 @@ using System.Text;
 namespace Laboratorio_7_OOP_201902.Cards
 {
     [Serializable]
-    public class SpecialCard : Card
+    public class SpecialCard : Card, ICharacteristics
     {
         //Atributos
         private string buffType;
@@ -32,6 +33,10 @@ namespace Laboratorio_7_OOP_201902.Cards
             BuffType = null;
         }
 
-        
+        public List<string> GetCharacteristics()
+        {
+            List<string> granLista = new List<string> { Name, Convert.ToString(Type), Effect };
+            return granLista;
+        }
     }
 }

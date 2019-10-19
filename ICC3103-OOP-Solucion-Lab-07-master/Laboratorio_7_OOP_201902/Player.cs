@@ -7,6 +7,7 @@ using System.Text;
 
 namespace Laboratorio_7_OOP_201902
 {
+    [Serializable]
     public class Player: IAttackPoints
     {
         //Constantes
@@ -177,7 +178,7 @@ namespace Laboratorio_7_OOP_201902
 
         public int[] GetAttackPoints(EnumType line = EnumType.None)
         {
-            EnumType[] enums = new EnumType[3] { EnumType.melee, EnumType.range, EnumType.longRange };
+            EnumType[] enums = new EnumType[3] { EnumType.longRange, EnumType.range, EnumType.longRange };
             int attackPoints = 0;
             foreach (EnumType e in enums)
             {

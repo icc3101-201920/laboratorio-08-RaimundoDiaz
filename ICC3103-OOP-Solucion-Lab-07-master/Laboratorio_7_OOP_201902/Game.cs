@@ -127,28 +127,26 @@ namespace Laboratorio_7_OOP_201902
             int firstOrSecondUser = ActivePlayer.Id == 0 ? 0 : 1;
             int winner = -1;
             bool bothPlayersPlayed = false;
-            
+
+            if (CheckIfData() == true)
+            {
+                Visualization.ShowProgramMessage("No previous data");
+            }
+            else
+            {
+                Visualization.ShowListOptions(new List<string>() { "Load Memory Card", "Start New Game" });
+                userInput = Visualization.GetUserInput(2);
+                if (userInput == 1)
+                {
+                    LoadData();
+                }
+            }
 
             while (turn < 4 && !CheckIfEndGame())
             {
                 bool drawCard = false;
                 //turno 0 o configuracion
-                if (!LoadData(turn))
-                {
-                    Visualization.ShowProgramMessage("No previous turn data");
-                }
-                else
-                {
-                    Visualization.ShowProgramMessage("Turns loaded...");
-                }
-                if (!LoadData())
-                {
-                    Visualization.ShowProgramMessage("No previous data");
-                }
-                else
-                {
-                    Visualization.ShowProgramMessage("Characters loaded...");
-                }
+                
 
                 if (turn == 0)
                 {
@@ -190,8 +188,10 @@ namespace Laboratorio_7_OOP_201902
                             }
                         }
                         firstOrSecondUser = ActivePlayer.Id == 0 ? 1 : 0;
+                        SaveData(); //pass, data saved
                     }
                     turn += 1;
+                    SaveData();//pass, data saved
                 }
                 //turnos siguientes
                 else
@@ -248,12 +248,14 @@ namespace Laboratorio_7_OOP_201902
                             //Revisar si le quedan cartas, si no le quedan obligar a pasar.
                             if (ActivePlayer.Hand.Cards.Count == 0)
                             {
+                                SaveData(); //pass, data saved
                                 firstOrSecondUser = ActivePlayer.Id == 0 ? 1 : 0;
                                 break;
                             }
                         }
                         else
                         {
+                            SaveData(); //pass, data saved
                             firstOrSecondUser = ActivePlayer.Id == 0 ? 1 : 0;
                             break;
                         }
@@ -356,52 +358,107 @@ namespace Laboratorio_7_OOP_201902
                 captains.Add(new SpecialCard(cardDetails[1], (EnumType)Enum.Parse(typeof(EnumType), cardDetails[2]), cardDetails[3]));
             }
         }
-        private static void SaveData(Deck)
+
+        private void SaveData()
         {
-            // Creamos el Stream donde guardaremos nuestros personajes
-            String fileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "../../SavedDataDeck.txt");
-            FileStream fsDeck = new FileStream(fileName, FileMode.Create);
+            String fileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Decks.txt");
+            FileStream fs = new FileStream(fileName, FileMode.Create);
             IFormatter formatter = new BinaryFormatter();
-            formatter.Serialize(fsDeck, deck);
-            fsDeck.Close();
-        }
-        private static void SaveData(int turn)
-        {
-            // Creamos el Stream donde guardaremos nuestros personajes
-            String fileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "../../SavedDataTurn.txt");
-            FileStream fsTurn = new FileStream(fileName, FileMode.Create);
-            FileStream fsDeck = new FileStream(fileName, FileMode.Create);
-            IFormatter formatter = new BinaryFormatter();
-            formatter.Serialize(fsTurn, turn);
-            fsTurn.Close();
+            formatter.Serialize(fs, decks);
+            fs.Close();
+
+            fileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Turns.txt");
+            fs = new FileStream(fileName, FileMode.Create);
+            formatter.Serialize(fs, turn);
+            fs.Close();
+
+            fileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Players.txt");
+            fs = new FileStream(fileName, FileMode.Create);
+            formatter.Serialize(fs, players);
+            fs.Close();
+
+            fileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ActivePlayers.txt");
+            fs = new FileStream(fileName, FileMode.Create);
+            formatter.Serialize(fs, activePlayer);
+            fs.Close();
+
+            fileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Captains.txt");
+            fs = new FileStream(fileName, FileMode.Create);
+            formatter.Serialize(fs, captains);
+            fs.Close();
+
+            fileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "BoardGame.txt");
+            fs = new FileStream(fileName, FileMode.Create);
+            formatter.Serialize(fs, boardGame);
+            fs.Close();
         }
 
-        private static Boolean LoadData()
+        private Boolean CheckIfData()
         {
-            String fileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "../../SavedDataDeck.txt");
+            String fileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Decks.txt");
             if (!File.Exists(fileName))
             {
                 return false;
             }
-            FileStream fsDeck = new FileStream(fileName, FileMode.Open);
-            IFormatter formatter = new BinaryFormatter();
-            deck = formatter.Deserialize(fsDeck) as Deck;
-            fsDeck.Close();
-            return true;
-        }
-
-        private static Boolean LoadData(int turn)
-        {
-            String fileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "../../CharactersTurn.txt");
+            fileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Turn.txt");
             if (!File.Exists(fileName))
             {
                 return false;
             }
-            FileStream fsTurn = new FileStream(fileName, FileMode.Open);
-            IFormatter formatter = new BinaryFormatter();
-            turn = formatter.Deserialize(fsTurn) as int;
-            fsTurn.Close();
+            fileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Players.txt");
+            if (!File.Exists(fileName))
+            {
+                return false;
+            }
+            fileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ActivePlayers.txt");
+            if (!File.Exists(fileName))
+            {
+                return false;
+            }
+            fileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Captains.txt");
+            if (!File.Exists(fileName))
+            {
+                return false;
+            }
+            fileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "BoardGame.txt");
+            if (!File.Exists(fileName))
+            {
+                return false;
+            }
             return true;
+        }
+        private void LoadData()
+        {
+            String fileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Decks.txt");
+            FileStream fs = new FileStream(fileName, FileMode.Open);
+            IFormatter formatter = new BinaryFormatter();
+            decks = formatter.Deserialize(fs) as List<Deck>;
+            fs.Close();
+
+            fileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Turn.txt");
+            fs = new FileStream(fileName, FileMode.Open);
+            turn = (int)formatter.Deserialize(fs);
+            fs.Close();
+
+            fileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Players.txt");
+            fs = new FileStream(fileName, FileMode.Open);
+            players = formatter.Deserialize(fs) as Player[];
+            fs.Close();
+
+            fileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ActivePlayers.txt");
+            fs = new FileStream(fileName, FileMode.Open);
+            activePlayer = formatter.Deserialize(fs) as Player;
+            fs.Close();
+
+            fileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Captains.txt");
+            fs = new FileStream(fileName, FileMode.Open);
+            captains = formatter.Deserialize(fs) as List<SpecialCard>;
+            fs.Close();
+
+            fileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "BoardGame.txt");
+            fs = new FileStream(fileName, FileMode.Open);
+            boardGame = formatter.Deserialize(fs) as Board;
+            fs.Close();
         }
     }
 }

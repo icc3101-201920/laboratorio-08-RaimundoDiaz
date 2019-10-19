@@ -2,11 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Laboratorio_7_OOP_201902.Interfaces;
 
 namespace Laboratorio_7_OOP_201902.Cards
 {
     [Serializable]
-    public class CombatCard : Card
+    public class CombatCard : Card,ICharacteristics
     {
         //Atributos
         private int attackPoints;
@@ -45,6 +46,10 @@ namespace Laboratorio_7_OOP_201902.Cards
             }
         }
 
-        
+        public List<string> GetCharacteristics()
+        {
+            List<string> granLista = new List<string> { Name, Convert.ToString(Type), Effect, Convert.ToString(attackPoints), Convert.ToString(hero) };
+            return granLista;
+        }
     }
 }

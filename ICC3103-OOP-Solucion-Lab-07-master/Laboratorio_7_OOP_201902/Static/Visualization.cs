@@ -12,7 +12,7 @@ namespace Laboratorio_7_OOP_201902.Static
         {
             CombatCard combatCard;
             Console.WriteLine("Hand: ");
-            for (int i = 0; i<hand.Cards.Count; i++)
+            for (int i = 0; i < hand.Cards.Count; i++)
             {
                 if (hand.Cards[i] is CombatCard)
                 {
@@ -32,17 +32,29 @@ namespace Laboratorio_7_OOP_201902.Static
         public static void ShowDecks(List<Deck> decks)
         {
             Console.WriteLine("Select one Deck:");
-            for (int i = 0; i<decks.Count; i++)
+            for (int i = 0; i < decks.Count; i++)
             {
-                Console.WriteLine($"({i}) Deck {i+1}");
+                Console.WriteLine($"({i}) Deck {i + 1}");
+                Visualization.ShowProgramMessage($"Total of cards: {decks[i].GetCharacteristics()[0]}");
+                Visualization.ShowProgramMessage($"Total of melee cards: {decks[i].GetCharacteristics()[1]}");
+                Visualization.ShowProgramMessage($"Total of range cards: {decks[i].GetCharacteristics()[2]}");
+                Visualization.ShowProgramMessage($"Total of long range cards: {decks[i].GetCharacteristics()[3]}");
+                Visualization.ShowProgramMessage($"Total of buff cards: {decks[i].GetCharacteristics()[4]}");
+                Visualization.ShowProgramMessage($"Total of weather cards: {decks[i].GetCharacteristics()[5]}");
+                Visualization.ShowProgramMessage($"Total of melee attack points: {decks[i].GetCharacteristics()[6]}");
+                Visualization.ShowProgramMessage($"Total of range attack points: {decks[i].GetCharacteristics()[7]}");
+                Visualization.ShowProgramMessage($"Total of long range attack points: {decks[i].GetCharacteristics()[8]}");
+                Visualization.ShowProgramMessage($"Total of attack points: {decks[i].GetCharacteristics()[9]}");
             }
+
         }
         public static void ShowCaptains(List<SpecialCard> captains)
         {
             Console.WriteLine("Select one captain:");
             for (int i = 0; i < captains.Count; i++)
             {
-                Console.WriteLine($"({i}) {captains[i].Name}: {captains[i].Effect}");
+                Visualization.ShowProgramMessage($"({i}) {captains[i].GetCharacteristics()[0]} ({captains[i].GetCharacteristics()[1]}) : {captains[i].GetCharacteristics()[2]}");
+
             }
         }
         public static int GetUserInput(int maxInput, bool stopper = false)
@@ -85,7 +97,7 @@ namespace Laboratorio_7_OOP_201902.Static
             Console.WriteLine(message);
             Console.ResetColor();
         }
-        public static void ShowListOptions (List<string> options, string message = null)
+        public static void ShowListOptions(List<string> options, string message = null)
         {
             if (message != null) Console.WriteLine($"{message}");
             for (int i = 0; i < options.Count; i++)
@@ -98,14 +110,14 @@ namespace Laboratorio_7_OOP_201902.Static
             Console.ResetColor();
             Console.Clear();
         }
-        public static void ShowBoard(Board board, int player, int [] lifePoints, int[] attackPoints)
+        public static void ShowBoard(Board board, int player, int[] lifePoints, int[] attackPoints)
         {
             int theOtherPlayer = player == 0 ? 1 : 0;
             Console.WriteLine("Board:\n");
             Console.WriteLine($"Opponent - LifePoints: {lifePoints[theOtherPlayer]} - AttackPoints: {attackPoints[theOtherPlayer]}:");
             ShowLineBoard(board, EnumType.longRange, theOtherPlayer, board.PlayerCards[theOtherPlayer].ContainsKey(EnumType.bufflongRange));
             ShowLineBoard(board, EnumType.range, theOtherPlayer, board.PlayerCards[theOtherPlayer].ContainsKey(EnumType.buffrange));
-            ShowLineBoard(board, EnumType.melee, theOtherPlayer, board.PlayerCards[theOtherPlayer].ContainsKey(EnumType.buffmelee));
+            ShowLineBoard(board, EnumType.longRange, theOtherPlayer, board.PlayerCards[theOtherPlayer].ContainsKey(EnumType.buffmelee));
             Console.Write($"\nWheater Cards:");
             foreach (Card card in board.WeatherCards)
             {
@@ -115,7 +127,7 @@ namespace Laboratorio_7_OOP_201902.Static
             }
             Console.WriteLine("\n");
             Console.WriteLine($"You - LifePoints: {lifePoints[player]} - AttackPoints: {attackPoints[player]}:");
-            ShowLineBoard(board, EnumType.melee, player, board.PlayerCards[player].ContainsKey(EnumType.buffmelee));
+            ShowLineBoard(board, EnumType.longRange, player, board.PlayerCards[player].ContainsKey(EnumType.buffmelee));
             ShowLineBoard(board, EnumType.range, player, board.PlayerCards[player].ContainsKey(EnumType.buffrange));
             ShowLineBoard(board, EnumType.longRange, player, board.PlayerCards[player].ContainsKey(EnumType.bufflongRange));
             Console.WriteLine("\n");
@@ -128,7 +140,7 @@ namespace Laboratorio_7_OOP_201902.Static
             }
             else
             {
-                Console.Write($"({line.ToString()}) "); 
+                Console.Write($"({line.ToString()}) ");
             }
             Console.Write($"[{board.GetAttackPoints(line)[player]}]: ");
             if (board.PlayerCards[player].ContainsKey(line))
@@ -139,9 +151,9 @@ namespace Laboratorio_7_OOP_201902.Static
                 }
             }
             Console.WriteLine();
-            
+
         }
 
     }
-    
+
 }
