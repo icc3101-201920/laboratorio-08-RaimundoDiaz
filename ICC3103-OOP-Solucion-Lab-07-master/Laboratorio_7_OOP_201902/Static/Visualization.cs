@@ -29,6 +29,7 @@ namespace Laboratorio_7_OOP_201902.Static
             }
             Console.WriteLine();
         }
+
         public static void ShowDecks(List<Deck> decks)
         {
             Console.WriteLine("Select one Deck:");

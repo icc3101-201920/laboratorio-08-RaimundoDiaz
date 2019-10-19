@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
+using System.Threading;
 
 namespace Laboratorio_7_OOP_201902
 {
@@ -128,15 +129,17 @@ namespace Laboratorio_7_OOP_201902
             int winner = -1;
             bool bothPlayersPlayed = false;
 
-            if (CheckIfData() == true)
+            if (CheckIfData() == false)
             {
                 Visualization.ShowProgramMessage("No previous data");
+                Thread.Sleep(1000);
+
             }
             else
             {
                 Visualization.ShowListOptions(new List<string>() { "Load Memory Card", "Start New Game" });
-                userInput = Visualization.GetUserInput(2);
-                if (userInput == 1)
+                userInput = Visualization.GetUserInput(1);
+                if (userInput == 0)
                 {
                     LoadData();
                 }
@@ -171,8 +174,8 @@ namespace Laboratorio_7_OOP_201902
                         //Mostrar mano
                         Visualization.ShowHand(ActivePlayer.Hand);
                         //Mostar opciones, cambiar carta o pasar
-                        Visualization.ShowListOptions(new List<string>() { "Change Card", "Pass" }, "Change 3 cards or ready to play:");
-                        userInput = Visualization.GetUserInput(1);
+                        Visualization.ShowListOptions(new List<string>() { "Change Card","View Card", "Pass" }, "Change 3 cards, view a card or ready to play:");
+                        userInput = Visualization.GetUserInput(2);
                         if (userInput == 0)
                         {
                             Visualization.ClearConsole();
@@ -187,6 +190,20 @@ namespace Laboratorio_7_OOP_201902
                                 Visualization.ShowHand(ActivePlayer.Hand);
                             }
                         }
+                        if (userInput == 1)
+                        {
+                            int i = 0;
+                            foreach (Card card in ActivePlayer.Hand.Cards)
+                            {
+                                //Console.Write($"|({i}) {card.GetCharacteristics()} |"); no se porque el GetCharacteristics me tira algo tan 
+                                Console.Write($"|({i}) {card.Name} {card.Type} {card.Effect} |");
+                                i++;
+                            }
+                            Console.WriteLine("");
+                            Visualization.ShowProgramMessage("Press any key to continue");
+                            Console.ReadKey();
+                        }
+
                         firstOrSecondUser = ActivePlayer.Id == 0 ? 1 : 0;
                         SaveData(); //pass, data saved
                     }
@@ -213,8 +230,22 @@ namespace Laboratorio_7_OOP_201902
                             drawCard = true;
                         }
                         Visualization.ShowHand(ActivePlayer.Hand);
-                        Visualization.ShowListOptions(new List<string> { "Play Card", "Pass" }, $"Make your move player {ActivePlayer.Id+1}:");
+                        Visualization.ShowListOptions(new List<string> { "Play Card","View Card", "Pass" }, $"Make your move player {ActivePlayer.Id+1}:");
                         userInput = Visualization.GetUserInput(1);
+                        if (userInput == 1)
+                        {
+                            int i = 0;
+                            foreach (Card card in ActivePlayer.Hand.Cards)
+                            {
+                                //Console.Write($"|({i}) {card.GetCharacteristics()} |"); no se porque el GetCharacteristics me tira algo tan 
+                                Console.Write($"|({i}) {card.Name} {card.Type} {card.Effect} |");
+                                i++;
+                                Visualization.ShowProgramMessage("Press any key to continue");
+                                Console.ReadKey();
+                            }
+                            Visualization.ShowProgramMessage("Press any key to continue");
+                            Console.ReadKey();
+                        }
                         if (userInput == 0)
                         {
                             //Si la carta es un buff solicitar a la fila que va.
@@ -308,7 +339,7 @@ namespace Laboratorio_7_OOP_201902
         }
         public void AddDecks()
         {
-            string path = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent + @"\Files\Decks.txt";
+            string path = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent + @"/Files/Decks.txt";
             StreamReader reader = new StreamReader(path);
             int deckCounter = 0;
             List<Card> cards = new List<Card>();
@@ -349,7 +380,7 @@ namespace Laboratorio_7_OOP_201902
         }
         public void AddCaptains()
         {
-            string path = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent + @"\Files\Captains.txt";
+            string path = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent + @"/Files/Captains.txt";
             StreamReader reader = new StreamReader(path);
             while (!reader.EndOfStream)
             {
@@ -396,36 +427,37 @@ namespace Laboratorio_7_OOP_201902
         private Boolean CheckIfData()
         {
             String fileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Decks.txt");
-            if (!File.Exists(fileName))
+            if (File.Exists(fileName))
             {
-                return false;
+                return true;
             }
-            fileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Turn.txt");
-            if (!File.Exists(fileName))
+            fileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Turns.txt");
+            if (File.Exists(fileName))
             {
-                return false;
+                return true;
             }
             fileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Players.txt");
-            if (!File.Exists(fileName))
+            if (File.Exists(fileName))
             {
-                return false;
+
+                return true;
             }
             fileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ActivePlayers.txt");
-            if (!File.Exists(fileName))
+            if (File.Exists(fileName))
             {
-                return false;
+                return true;
             }
             fileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Captains.txt");
-            if (!File.Exists(fileName))
+            if (File.Exists(fileName))
             {
-                return false;
+                return true;
             }
             fileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "BoardGame.txt");
-            if (!File.Exists(fileName))
+            if (File.Exists(fileName))
             {
-                return false;
+                return true;
             }
-            return true;
+            return false;
         }
         private void LoadData()
         {
@@ -435,7 +467,7 @@ namespace Laboratorio_7_OOP_201902
             decks = formatter.Deserialize(fs) as List<Deck>;
             fs.Close();
 
-            fileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Turn.txt");
+            fileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Turns.txt");
             fs = new FileStream(fileName, FileMode.Open);
             turn = (int)formatter.Deserialize(fs);
             fs.Close();

@@ -2,11 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Laboratorio_7_OOP_201902.Interfaces;
 
 namespace Laboratorio_7_OOP_201902.Cards
 {
     [Serializable]
-    public abstract class Card
+    public abstract class Card:ICharacteristics
     {
         //Atributos
         protected string name;
@@ -53,6 +54,12 @@ namespace Laboratorio_7_OOP_201902.Cards
                 this.effect = value;
             }
         }
-        
+
+        public List<string> GetCharacteristics()
+        {
+            List<string> granLista = new List<string> { Name, Convert.ToString(Type), Effect };
+            return granLista;
+
+        }
     }
 }
